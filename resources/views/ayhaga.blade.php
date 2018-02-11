@@ -1,0 +1,1 @@
+<a href="{{route('Find.child',['location'=>'Fangary','destination'=>'Tahrir'])}}" class="btn btn-primary">See</a>
