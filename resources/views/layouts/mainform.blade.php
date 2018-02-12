@@ -16,28 +16,24 @@
                 </div>
                 <div class="col-md-2 col-sm-12  text-white text-center ">
                     <div class="card bg-success " id="searchcard" style="width: 23rem;">
-                        <div class="card-body" >
+                        <div class="card-body " >
                             <h5 class="card-title display-4">Get Started !</h5>
-                            <form action="/result" class="" method="post">
+                            <form action="{{route("Graph.start")}}" class="" method="post">
                                 {{csrf_field()}}
                                 <div class="form-group">
                                     <label for="location" class=""><h3 class="display-4" style="font-family: 'Lobster', cursive;">Location</h3></label>
-                                    <select class="form-control form-control-lg" name="location" id="location">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                    <select class="form-control form-control-lg " name="location" id="location">
+                                        @foreach($streets as $street)
+                                        <option value="{{$street->id}}">{{$street->street_name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="destination" class=""><h3 class="display-4" style="font-family: 'Lobster', cursive;">Destination</h3></label>
                                     <select class="form-control form-control-lg" name="destination" id="destination">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
+                                        @foreach($streets as $street)
+                                            <option value="{{$street->id}}">{{$street->street_name}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <button class="btn btn-primary form-control" type="submit"><h3>YALLA !</h3></button>

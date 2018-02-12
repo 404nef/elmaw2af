@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome')->with('streets',\App\Street::all());
 });
 
 Auth::routes();
@@ -25,14 +25,12 @@ Route::post('/result', function () {
 Route::get('/editmyprofile', function () {
     return view('Users.edit');
 });
-Route::get('/khtot', function () {
-    return view('khtot')->with('transports',\App\Transport::all());
-});
+Route::post('/Findpath',[
+   "uses"=>"GraphController@startgraph",
+    "as"=>"Graph.start"
+]);
 
 Route::get('/findchildern/{location}/{destination}',[
    'uses'=>'GraphController@constructgraph',
     'as'=>'Find.child',
 ]);
-Route::get('/yarab',function(){
-   return view('ayhaga');
-});
