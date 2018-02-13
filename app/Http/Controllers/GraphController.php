@@ -18,62 +18,63 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     public $initiallocation;
     public $initialdestination;
     public $stackarray = [];
-    public $suggestedroutes =[];
-    public $goodroutes=[];
+    public $currentroute =[];
+    public $bestroutes=[];
 
 
     public function startgraph(Request $request){
         $this->constructgraph(Street::find($request->location)->street_name,Street::find($request->destination)->street_name);
-        foreach ($this->Routes as $key => $value) {
-            echo "<h1> Child of ".$key."</h1>";
-                foreach ($value as $val) {
+        //print_r($this->Routes);
+        /*foreach ($this->Routes as $key => $value) {
+              echo "<h1>Childs of".$key."<br>";
+                  foreach ($value as $val) {
+                      $st = Street::findorFail($val);
+                      echo $st['street_name']."->";
+                  }
+                  echo "<br><br>";
 
-                        $st = Street::findorFail($val);
-                        echo $st['street_name']."--->";
+          }
+        */
 
-                    }
-                    echo "<br><br><br><br>";
-                }
+        foreach ($this->bestroutes as $bestroute) {
+                        foreach ($bestroute as $value){
 
-        /*foreach ($this->goodroutes as $goodroute) {
-                        foreach ($goodroute as $value){
-                            if($value==end($goodroute)) {
-                                echo "<h2>" . $value . "</h2>";
-                            }else{
                                 echo "<h2>" . $value . "-></h2>";
-                            }
+
                         }
                         echo "<br><br><br><br><br>";
             }
-        */
+
     }
 
     public function constructgraph($location,$destination){
 
             $this->initialdestination=Street::where('street_name',$destination)->first();
-            $this->Vistied[$location]=0;
-            $this->Routes[$location] = $this->findchilds($location);
+            array_push($this->currentroute, $location);
+            //print_r($this->currentroute);
+            //print_r($this->bestroutes);
+            if($location!=$destination) {
+                $this->Routes[$location] = $this->findchilds($location);
+                foreach ($this->Routes as $key => $value) {
+                    if ($key == $location) {
+                        foreach ($value as $val) {
+                            $st = Street::findorFail($val);
+                            $this->constructgraph($st['street_name'], $destination);
+                            //print_r($this->currentroute);
+                            if (($street = array_search($st['street_name'], $this->currentroute)) !== false) {
+                                unset($this->currentroute[$street]);
+                            }
+                        }
+                    }
+                }
+            }else{
+                if($location==$destination) {
+                    if (!in_array($this->currentroute,$this->bestroutes)) {
+                        array_push($this->bestroutes, $this->currentroute);
+                    }
+                }
+            }
 
-
-               array_push($this->suggestedroutes,$location);
-               foreach ($this->Routes as $key => $value) {
-                   if ($key == $location) {
-                       foreach ($value as $val) {
-                           if ($val == $this->initialdestination->id) {
-                               array_push($this->suggestedroutes,$destination);
-                               array_push($this->goodroutes,$this->suggestedroutes);
-                               $this->suggestedroutes=[];
-                               continue;
-                           } else {
-                               $st = Street::findorFail($val);
-                               //echo "<h1> Child of ".$location."</h1> - > ".$st['street_name']."<br><br>";
-                               $this->constructgraph($st['street_name'], $destination);
-                           }
-                       }
-                   }
-               }
-
-               
     }
 
 
@@ -81,37 +82,38 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
         $street = Street::where('street_name',$location)->first();
         $transports = DB::table('street_transport')->where('street_id',$street['id'])->get();
         $children = [];
-        $addtostack=false;
+        //echo "<br><br><br><br>";
+        //echo "Childs of" .$location."<br>";
+        //print_r($this->currentroute);
         if(count($transports)>0) {
             foreach ($transports as $transport) {
 
                 if ($transport->street_next_id!=0) {
 
                     $st = Street::find($transport->street_next_id);
-                    if( !array_key_exists($st['street_name'],$this->stackarray)) {
-
+                    if( !in_array($st['street_name'],$this->currentroute)&&!in_array($transport->street_next_id,$children)) {
+                        //echo "next".$st['street_name']."<br>";
                         array_push($children, $transport->street_next_id);
-                        $addtostack=true;
+
                     }
                 }
 
                 if ($transport->street_prev_id!=0) {
 
                     $st = Street::find($transport->street_prev_id);
-                    if( !array_key_exists($st['street_name'],$this->stackarray)) {
-
+                    if( !in_array($st['street_name'],$this->currentroute)&&!in_array($transport->street_prev_id,$children)) {
+                        //echo "prev".$st['street_name']."<br>";
                         array_push($children, $transport->street_prev_id);
-                        $addtostack=true;
+
                     }
                 }
 
 
             }
-            if($addtostack){
-                $this->stackarray[$location]=0;
-            }
         }
-
+        //print_r($this->currentroute);
+        //print_r($children);
+        //echo "<br><br><br><br>";
         return $children;
 
 
