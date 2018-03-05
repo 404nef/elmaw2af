@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     public $bestroutes=[];
     public $badroutes=[];
     public $tranzites=[];
+    public $done=false;
     public function startgraph(Request $request){
         $this->initiallocation=Street::find($request->location)->street_name;
        $this->constructgraph($this->initiallocation,Street::find($request->destination)->street_name);
@@ -68,26 +69,53 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
         }
         //print_r($this->currentroute);
         //print_r($this->bestroutes);
-        if($location!=$destination&&count(array_unique($this->tranzites))<=2) {
+        if($location!=$destination&&count(array_unique($this->tranzites))<=4) {
             $this->Routes[$location] = $this->findchilds($location);
             if(count($this->Routes[$location]>0)) {
                 foreach ($this->Routes as $key => $value) {
                     if ($key == $location) {
                         for ($i = 0; $i < count($value); $i += 2) {
-
+                            if(count($this->tranzites)>0){
+                                //print_r($this->tranzites);
+                                $st = Street::findorFail($value[$i]);
+                                if($value[$i+1]!=$this->tranzites[count($this->tranzites)-1]&&!in_array($value[$i + 1],$this->tranzites)) {
+                                    array_push($this->currentroute, $st['street_name']);
+                                    array_push($this->currentroute, $value[$i + 1]);
+                                    array_push($this->tranzites, $value[$i + 1]);
+                                    $this->constructgraph($st['street_name'], $destination);
+                                    array_pop($this->currentroute);
+                                    array_pop($this->currentroute);
+                                    array_pop($this->tranzites);
+                                }else if ($value[$i+1]==$this->tranzites[count($this->tranzites)-1]&&in_array($value[$i + 1],$this->tranzites)){
+                                    array_push($this->currentroute, $st['street_name']);
+                                    array_push($this->currentroute, $value[$i + 1]);
+                                    array_push($this->tranzites, $value[$i + 1]);
+                                    $this->constructgraph($st['street_name'], $destination);
+                                    array_pop($this->currentroute);
+                                    array_pop($this->currentroute);
+                                    array_pop($this->tranzites);
+                                }
+                            }else{
+                                $st = Street::findorFail($value[$i]);
+                                array_push($this->currentroute, $st['street_name']);
+                                array_push($this->currentroute, $value[$i + 1]);
+                                array_push( $this->tranzites,$value[$i + 1]);
+                                $this->constructgraph($st['street_name'], $destination);
+                                array_pop($this->currentroute);
+                                array_pop($this->currentroute);
+                                array_pop($this->tranzites);
+                            }
                             //print_r($this->currentroute);
                             //echo "<br><br>";
                             //print_r($this->currentroute);
-                            $st = Street::findorFail($value[$i]);
-                            array_push($this->currentroute, $st['street_name']);
-                            array_push($this->currentroute, $value[$i + 1]);
-                            array_push( $this->tranzites,$value[$i + 1]);
-                            $this->constructgraph($st['street_name'], $destination);
-                            array_pop($this->currentroute);
-                            array_pop($this->currentroute);
-                            array_pop($this->tranzites);
+                            if($this->done){
+                                break;
+                            }
 
 
+                        }
+                        if($this->done){
+                            break;
                         }
 
                     }
@@ -97,7 +125,10 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
             if($location==$destination) {
                 if (!in_array($this->currentroute,$this->bestroutes)) {
                     array_push($this->bestroutes, $this->currentroute);
-                    //print_r($this->tranzites);
+                    if(count($this->bestroutes)==20){
+                        $this->done = true;
+                    }
+
 
                 }
             }
