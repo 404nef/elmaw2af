@@ -19,21 +19,24 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     public $bestroutes=[];
     public $badroutes=[];
     public $tranzites=[];
+    public $numbers=[];
     public $done=false;
     public function startgraph(Request $request){
         $this->initiallocation=Street::find($request->location)->street_name;
        $this->constructgraph($this->initiallocation,Street::find($request->destination)->street_name);
-        //print_r($this->Routes);
-        /*foreach ($this->Routes as $key => $value) {
-              echo "<h1>Childs of".$key."<br>";
-                  foreach ($value as $val) {
-                      $st = Street::findorFail($val);
-                      echo $st['street_name']."->";
-                  }
-                  echo "<br><br>";
-          }
-        */
-        foreach ($this->bestroutes as $bestroute) {
+        for($i = 0 ; $i < count($this->bestroutes) ; $i++){
+            for($j=$i+1;$j<count($this->bestroutes);$j++){
+                if($this->numbers[$i]>$this->numbers[$j]){
+                    $temp =$this->bestroutes[$i];
+                    $this->bestroutes[$i]=$this->bestroutes[$j];
+                    $this->bestroutes[$j]=$temp;
+                    $temp=$this->numbers[$i];
+                    $this->numbers[$i]=$this->numbers[$j];
+                    $this->numbers[$j]=$temp;
+                }
+            }
+        }
+       foreach ($this->bestroutes as $bestroute) {
             for($i = 0 ; $i<count($bestroute) ;$i++)
             {
                 if($i%2==0){
@@ -48,18 +51,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
             echo "<br><br><br><br><br>";
         }
 
-        /*
-        $Transports = Transport::all();
-        foreach ($Transports as $transport){
-            echo $transport->Transport_number;
-            echo "<br>";
-            $khatser = $transport->streets()->get();
-            foreach ($khatser as $khat){
-                echo $khat['street_name']."    ";
-            }
-            echo "<br><br>";
-        }
-        */
+
     }
     public function constructgraph($location,$destination){
         $this->initialdestination=Street::where('street_name',$destination)->first();
@@ -69,7 +61,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
         }
         //print_r($this->currentroute);
         //print_r($this->bestroutes);
-        if($location!=$destination&&count(array_unique($this->tranzites))<=4) {
+        if($location!=$destination&&count(array_unique($this->tranzites))<=2) {
             $this->Routes[$location] = $this->findchilds($location);
             if(count($this->Routes[$location]>0)) {
                 foreach ($this->Routes as $key => $value) {
@@ -125,10 +117,11 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
             if($location==$destination) {
                 if (!in_array($this->currentroute,$this->bestroutes)) {
                     array_push($this->bestroutes, $this->currentroute);
-                    if(count($this->bestroutes)==20){
+                    array_push($this->numbers,count(array_unique($this->tranzites)));
+                    /*if(count($this->bestroutes)==20){
                         $this->done = true;
                     }
-
+                    */
 
                 }
             }
