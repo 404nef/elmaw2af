@@ -20,11 +20,17 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     public $badroutes=[];
     public $tranzites=[];
     public $numbers=[];
+    public $costestmiation=[];
+    public $costtillnow=0;
     public $done=false;
+
+    
+
     public function startgraph(Request $request){
         $this->initiallocation=Street::find($request->location)->street_name;
        $this->constructgraph($this->initiallocation,Street::find($request->destination)->street_name);
-        for($i = 0 ; $i < count($this->bestroutes) ; $i++){
+
+       for($i = 0 ; $i < count($this->bestroutes) ; $i++){
             for($j=$i+1;$j<count($this->bestroutes);$j++){
                 if($this->numbers[$i]>$this->numbers[$j]){
                     $temp =$this->bestroutes[$i];
@@ -33,21 +39,32 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                     $temp=$this->numbers[$i];
                     $this->numbers[$i]=$this->numbers[$j];
                     $this->numbers[$j]=$temp;
+                    $temp=$this->costestmiation[$i];
+                    $this->costestmiation[$i]=$this->costestmiation[$j];
+                    $this->costestmiation[$j]=$temp;
                 }
             }
         }
+
+
+
+        $counter=0;
        foreach ($this->bestroutes as $bestroute) {
+
             for($i = 0 ; $i<count($bestroute) ;$i++)
             {
                 if($i%2==0){
                     echo "Street name :".$bestroute[$i]."<br>";
                 }else{
                     if($bestroute[$i]!=-1) {
-                        echo "Transport number : " . Transport::find($bestroute[$i])->Transport_number;
+                        $transportselected =Transport::find($bestroute[$i]);
+                        echo "Transport number : " . $transportselected->Transport_number;
                     }
                     echo"<br>";
                 }
             }
+            echo $this->costestmiation[$counter];
+            $counter++;
             echo "<br><br><br><br><br>";
         }
 
@@ -61,20 +78,29 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
         }
         //print_r($this->currentroute);
         //print_r($this->bestroutes);
+
         if($location!=$destination&&count(array_unique($this->tranzites))<=2) {
             $this->Routes[$location] = $this->findchilds($location);
             if(count($this->Routes[$location]>0)) {
                 foreach ($this->Routes as $key => $value) {
+                    //$this->costtillnow=0;
                     if ($key == $location) {
                         for ($i = 0; $i < count($value); $i += 2) {
                             if(count($this->tranzites)>0){
                                 //print_r($this->tranzites);
                                 $st = Street::findorFail($value[$i]);
+                                $transportneeded = Transport::findorFail($value[$i + 1]);
                                 if($value[$i+1]!=$this->tranzites[count($this->tranzites)-1]&&!in_array($value[$i + 1],$this->tranzites)) {
                                     array_push($this->currentroute, $st['street_name']);
                                     array_push($this->currentroute, $value[$i + 1]);
                                     array_push($this->tranzites, $value[$i + 1]);
+                                    $this->costtillnow+=$transportneeded->Ticket_cost;
+                                    //echo $this->costtillnow;
+                                    //echo "<br>";
                                     $this->constructgraph($st['street_name'], $destination);
+                                    $this->costtillnow-=$transportneeded->Ticket_cost;
+                                    //echo $this->costtillnow;
+                                    //echo "<br>";
                                     array_pop($this->currentroute);
                                     array_pop($this->currentroute);
                                     array_pop($this->tranzites);
@@ -88,27 +114,25 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                     array_pop($this->tranzites);
                                 }
                             }else{
+
+                                $transportneeded = Transport::findorFail($value[$i + 1]);
                                 $st = Street::findorFail($value[$i]);
                                 array_push($this->currentroute, $st['street_name']);
                                 array_push($this->currentroute, $value[$i + 1]);
                                 array_push( $this->tranzites,$value[$i + 1]);
+                                $this->costtillnow+=$transportneeded->Ticket_cost;
+                                //echo $this->costtillnow;
+                                //echo "<br>";
                                 $this->constructgraph($st['street_name'], $destination);
+                                $this->costtillnow-=$transportneeded->Ticket_cost;
+                                //echo $this->costtillnow;
+                                //echo "<br>";
                                 array_pop($this->currentroute);
                                 array_pop($this->currentroute);
                                 array_pop($this->tranzites);
                             }
-                            //print_r($this->currentroute);
-                            //echo "<br><br>";
-                            //print_r($this->currentroute);
-                            if($this->done){
-                                break;
-                            }
-
-
                         }
-                        if($this->done){
-                            break;
-                        }
+
 
                     }
                 }
@@ -118,10 +142,9 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                 if (!in_array($this->currentroute,$this->bestroutes)) {
                     array_push($this->bestroutes, $this->currentroute);
                     array_push($this->numbers,count(array_unique($this->tranzites)));
-                    /*if(count($this->bestroutes)==20){
-                        $this->done = true;
-                    }
-                    */
+                    array_push($this->costestmiation,$this->costtillnow);
+                    echo $this->costtillnow;
+                    echo "<br>";
 
                 }
             }

@@ -36,12 +36,13 @@
                         <div class="card text-center routes border-rounded mb-3">
                             <div class="card-body">
                                 <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
+                                <!--type==bus-->
                                 <div class="d-flex flex-row">
                                     <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
                                 </div>
+                                <!--type==metro-->
                                 <div class="d-flex flex-row">
                                     <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
-
                                 </div>
                                 <div class="d-flex flex-row mb-5">
                                     <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
