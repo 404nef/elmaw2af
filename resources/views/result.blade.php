@@ -42,11 +42,14 @@
                                 <!--type==bus-->
                                 @if($bestroutes[$i][$j]!=$bestroutes[$i][$j-2])
                                 <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">{{$bestroutes[$i][$j]}}</strong>
+                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">{{$bestroutes[$i][$j]}} <br> From {{$bestroutes[$i][$j-3]}} <br> </strong>
                                 </div>
                                 @endif
                                 @endif
                                 @endfor
+                                <div class="d-flex flex-row">
+                                    <img src="{{asset('destinationreached.png')}}" class="img-fluid  mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">{{$destination}}</strong>
+                                </div>
                                 <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
 
                             </div>

@@ -51,9 +51,10 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     }
     public function startgraph(Request $request){
         $this->initiallocation=Street::find($request->location)->street_name;
-        $this->constructgraph($this->initiallocation,Street::find($request->destination)->street_name);
+        $arrival = Street::find($request->destination)->street_name;
+        $this->constructgraph($this->initiallocation,$arrival);
         $this->sortaccordingtranzites();
-       return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes);
+       return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$arrival);
     }
     public function constructgraph($location,$destination){
         $this->initialdestination=Street::where('street_name',$destination)->first();
