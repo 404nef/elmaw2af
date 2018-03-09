@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public $Routes = [];
     public $Vistied=[];
     public $initiallocation;
@@ -21,16 +23,14 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     public $tranzites=[];
     public $numbers=[];
     public $costestmiation=[];
+    public $types=[];
     public $costtillnow=0;
+    public $besttypes=[];
     public $done=false;
 
     
-
-    public function startgraph(Request $request){
-        $this->initiallocation=Street::find($request->location)->street_name;
-       $this->constructgraph($this->initiallocation,Street::find($request->destination)->street_name);
-
-       for($i = 0 ; $i < count($this->bestroutes) ; $i++){
+    public function sortaccordingtranzites(){
+        for($i = 0 ; $i < count($this->bestroutes) ; $i++){
             for($j=$i+1;$j<count($this->bestroutes);$j++){
                 if($this->numbers[$i]>$this->numbers[$j]){
                     $temp =$this->bestroutes[$i];
@@ -42,33 +42,18 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                     $temp=$this->costestmiation[$i];
                     $this->costestmiation[$i]=$this->costestmiation[$j];
                     $this->costestmiation[$j]=$temp;
+                    $temp=$this->besttypes[$i];
+                    $this->besttypes[$i]=$this->besttypes[$j];
+                    $this->besttypes[$j]=$temp;
                 }
             }
         }
-
-
-
-        $counter=0;
-       foreach ($this->bestroutes as $bestroute) {
-
-            for($i = 0 ; $i<count($bestroute) ;$i++)
-            {
-                if($i%2==0){
-                    echo "Street name :".$bestroute[$i]."<br>";
-                }else{
-                    if($bestroute[$i]!=-1) {
-                        $transportselected =Transport::find($bestroute[$i]);
-                        echo "Transport number : " . $transportselected->Transport_number;
-                    }
-                    echo"<br>";
-                }
-            }
-            echo $this->costestmiation[$counter];
-            $counter++;
-            echo "<br><br><br><br><br>";
-        }
-
-
+    }
+    public function startgraph(Request $request){
+        $this->initiallocation=Street::find($request->location)->street_name;
+        $this->constructgraph($this->initiallocation,Street::find($request->destination)->street_name);
+        $this->sortaccordingtranzites();
+       return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes);
     }
     public function constructgraph($location,$destination){
         $this->initialdestination=Street::where('street_name',$destination)->first();
@@ -83,7 +68,6 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
             $this->Routes[$location] = $this->findchilds($location);
             if(count($this->Routes[$location]>0)) {
                 foreach ($this->Routes as $key => $value) {
-                    //$this->costtillnow=0;
                     if ($key == $location) {
                         for ($i = 0; $i < count($value); $i += 2) {
                             if(count($this->tranzites)>0){
@@ -92,8 +76,9 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                 $transportneeded = Transport::findorFail($value[$i + 1]);
                                 if($value[$i+1]!=$this->tranzites[count($this->tranzites)-1]&&!in_array($value[$i + 1],$this->tranzites)) {
                                     array_push($this->currentroute, $st['street_name']);
-                                    array_push($this->currentroute, $value[$i + 1]);
+                                    array_push($this->currentroute, $transportneeded->Transport_number);
                                     array_push($this->tranzites, $value[$i + 1]);
+                                    array_push($this->types,$transportneeded->Transport_type);
                                     $this->costtillnow+=$transportneeded->Ticket_cost;
                                     //echo $this->costtillnow;
                                     //echo "<br>";
@@ -104,25 +89,29 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                     array_pop($this->currentroute);
                                     array_pop($this->currentroute);
                                     array_pop($this->tranzites);
+                                    array_pop($this->types);
                                 }else if ($value[$i+1]==$this->tranzites[count($this->tranzites)-1]&&in_array($value[$i + 1],$this->tranzites)){
                                     array_push($this->currentroute, $st['street_name']);
-                                    array_push($this->currentroute, $value[$i + 1]);
+                                    array_push($this->currentroute, $transportneeded->Transport_number);
                                     array_push($this->tranzites, $value[$i + 1]);
+                                    array_push($this->types,$transportneeded->Transport_type);
                                     $this->constructgraph($st['street_name'], $destination);
                                     array_pop($this->currentroute);
                                     array_pop($this->currentroute);
                                     array_pop($this->tranzites);
+                                    array_pop($this->types);
                                 }
                             }else{
 
                                 $transportneeded = Transport::findorFail($value[$i + 1]);
                                 $st = Street::findorFail($value[$i]);
                                 array_push($this->currentroute, $st['street_name']);
-                                array_push($this->currentroute, $value[$i + 1]);
+                                array_push($this->currentroute, $transportneeded->Transport_number);
                                 array_push( $this->tranzites,$value[$i + 1]);
                                 $this->costtillnow+=$transportneeded->Ticket_cost;
                                 //echo $this->costtillnow;
                                 //echo "<br>";
+                                array_push($this->types,$transportneeded->Transport_type);
                                 $this->constructgraph($st['street_name'], $destination);
                                 $this->costtillnow-=$transportneeded->Ticket_cost;
                                 //echo $this->costtillnow;
@@ -130,6 +119,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                 array_pop($this->currentroute);
                                 array_pop($this->currentroute);
                                 array_pop($this->tranzites);
+                                array_pop($this->types);
                             }
                         }
 
@@ -143,8 +133,8 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                     array_push($this->bestroutes, $this->currentroute);
                     array_push($this->numbers,count(array_unique($this->tranzites)));
                     array_push($this->costestmiation,$this->costtillnow);
-                    echo $this->costtillnow;
-                    echo "<br>";
+                    array_push($this->besttypes,$this->types);
+
 
                 }
             }

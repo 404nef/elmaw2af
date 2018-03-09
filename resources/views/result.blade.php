@@ -32,214 +32,42 @@
         <section id="results">
             <div class="container">
                 <div class="row wrapper">
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
+                    @for($i = 0 ; $i < count($bestroutes); $i++)
+                    <div class="col-sm-12 col-xs-12 ">
+                        <div class="card text-center routes align-content  border-rounded mb-3">
+                            <div class="card-body text-center ">
+                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route {{$i+1}}</strong></h5>
+                                @for($j=0;$j<count($bestroutes[$i]);$j++)
+                                 @if($j%2!=0&&$bestroutes[$i][$j]!=-1)
                                 <!--type==bus-->
+                                @if($bestroutes[$i][$j]!=$bestroutes[$i][$j-2])
                                 <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
+                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">{{$bestroutes[$i][$j]}}</strong>
                                 </div>
-                                <!--type==metro-->
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
+                                @endif
+                                @endif
+                                @endfor
                                 <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
                             </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
                             <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
+                                <strong>Cost estimated : {{$costestimation[$i]}} <i class="far fa-money-bill-alt"></i></strong>
                                 <br>
                                 <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="card text-center routes border-rounded mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><strong><i class="fas fa-road"></i> Route 1</strong></h5>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">Bus Number</strong>
-                                </div>
-                                <div class="d-flex flex-row">
-                                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Metro Number</strong>
 
-                                </div>
-                                <div class="d-flex flex-row mb-5">
-                                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 90px;" alt=""> <strong class="mt-5">Microbus Number</strong>
-                                </div>
-                                <a href="#" class="btn btn-success"><img src="{{asset('maps.png')}}" width="30" height="30" class="img-fluid mr-3" alt=""> Visualize route</a>
-                            </div>
-                            <div class="card-footer  text-white bg-success">
-                                <strong>Cost estimated : 5 <i class="far fa-money-bill-alt"></i></strong>
-                                <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
-                            </div>
-                        </div>
                     </div>
+
+                    @endfor
+
+
                 </div>
             </div>
         </section>
