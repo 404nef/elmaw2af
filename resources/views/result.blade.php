@@ -1,6 +1,9 @@
 
-        <head>
 
+        
+        
+        <head>
+         
             <style type="text/css">
                 #reviews{
                     background: url("{{asset('review.jpg')}}");
@@ -12,6 +15,9 @@
                 #message{
                     background-image: url("{{asset('greenbg.jpg')}}");
                 }
+                #filters{
+                    padding : 50px;
+                }
             </style>
 
             @include('layouts.links')
@@ -21,6 +27,7 @@
         </head>
         <body>
 
+
         <!--MessageSection-->
         <section id="message">
         <div class="container text-center text-white">
@@ -28,6 +35,39 @@
         </div>
         </section>
 
+        <!--Fliters Section -->
+        <section id="filters">
+        <div class="container">
+                <div class="row">
+                    <div class="col-sm-4 col-xs-12">
+                    <form action="{{route('Filter.cost')}}" method="post">
+                    {{csrf_field()}}
+                    <input type="hidden" name="costestimation" value="{{serialize($costestimation)}}">
+                    <input type="hidden" name="bestroutes" value="{{ serialize($bestroutes) }}">
+                    <input type="hidden" name="besttypes" value="{{ serialize($besttypes) }}">
+                    <input type="hidden" name="numbers" value="{{ serialize($numbers) }}">
+                    <input type="hidden" name="destination" value="{{ $destination }}">
+
+                    <button class="btn btn-block btn-success" type="submit"><i class="far fa-money-bill-alt"></i>
+
+  Cost</button>
+                    </form>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                    <form action="/" method="get">
+                    {{csrf_field()}}
+                    <button class="btn btn-block btn-primary" type="submit"><i class="fas fa-home"></i>
+
+   Back to home</button>
+                    </form>
+                    </div>
+                    
+
+                </div>
+            </div>
+        </div>
+
+        </section>
         <!--Results-->
         <section id="results">
             <div class="container">
@@ -80,6 +120,15 @@
     <!--Review Section-->
         <section id="reviews">
             <div class="container ">
+             @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <h1 class="display-2 text-white text-center">Was it helpful ?</h1>
                 <hr>
                 <hr class="footerhr">
@@ -89,34 +138,44 @@
                             <h2 class="display-5 ">Your review <i class="fas fa-arrow-circle-down"></i></h2>
                         </div>
                         <div class="card-body">
-                            <form action="" class="" method="post">
+                            <form action="{{route('ReviewsController.store')}}"  method="post">
                                 {{csrf_field()}}
                                 <div class="form-group">
                                     <label for="Email" class="display-6">Email</label>
                                     <div class="input-group-prepend">
                                         <div class="input-group-text "><i class="fas fa-at"></i></div>
-                                        <input type="text" class="form-control" name="email" id="Email" placeholder="example@example.com">
+                                        <input type="text" class="form-control"required name="email" id="Email" placeholder="example@example.com">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="review" class="display-6">Your Review</label>
                                     <div class="input-group-prepend">
                                         <div class="input-group-text "><i class="fas fa-pencil-alt"></i></div>
-                                    <textarea name="review" class="form-control" id="review" cols="30" rows="10" placeholder="Your review"></textarea>
+                                    <textarea name="review" required class="form-control" id="review" cols="30" rows="10" placeholder="Your review"></textarea>
                                     </div>
                                 </div>
                         </div>
                         <div class="card-footer bg-success">
-                            <button class="btn btn-primary btn-block"><i class="fas fa-envelope-open mr-2"></i>Send</button>
+                            <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-envelope-open mr-2"></i>Send</button>
                         </div>
                         </form>
                     </div>
                 </div>
             </div>
         </section>
-
-
-
+        <script>
+                
+                $(document).ready(function(e){
+                $('.search-panel .dropdown-menu').find('a').click(function(e) {
+                    e.preventDefault();
+                    var param = $(this).attr("href").replace("#","");
+                    var concept = $(this).text();
+                    $('.search-panel span#search_concept').text(concept);
+                    $('.input-group #search_param').val(param);
+                });
+            });
+           
+        </script>
 
         <!--Contact Us From-->
         @include('layouts.footer')

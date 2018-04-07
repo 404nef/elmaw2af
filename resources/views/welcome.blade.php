@@ -9,6 +9,28 @@
         @include('layouts.links')
 
 
+        
+
+        <style type="text/css">
+        
+        #loader-wrapper .loader-section {
+                position: fixed;
+                top: 0;
+                width: 51%;
+                height: 100%;
+                background: #222222;
+                z-index: 1000;
+        }
+        
+        #loader-wrapper .loader-section.section-left {
+            left: 0;
+        }
+        
+        #loader-wrapper .loader-section.section-right {
+            right: 0;
+        }
+        
+        </style>
 
     </head>
     <body>
@@ -150,12 +172,9 @@
     </section>
 
 
+
     <!--Contact Us Footer-->
     @include('layouts.footer')
-
-
-
-
 
 
 

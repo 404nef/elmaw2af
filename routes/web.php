@@ -34,3 +34,14 @@ Route::get('/findchildern/{location}/{destination}',[
    'uses'=>'GraphController@constructgraph',
     'as'=>'Find.child',
 ]);
+Route::post('/Sendreview',[
+    "uses"=>"ReviewsController@store",
+     "as"=>"ReviewsController.store"
+ ]);
+
+
+
+ Route::post('/filterbycost',[
+    'uses'=>'GraphController@filtercost',
+     'as'=>'Filter.cost',
+ ]);

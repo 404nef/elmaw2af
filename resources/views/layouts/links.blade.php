@@ -8,9 +8,10 @@
 
 <!--W3S-->
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
+<link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
 <title>Laravel</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<script src="{{ asset('js/toastr.min.js') }}"></script>
