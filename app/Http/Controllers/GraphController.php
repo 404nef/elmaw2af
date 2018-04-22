@@ -192,7 +192,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
         $this->sortaccordingtranzites();
         //print_r($this->numbers);
         //$this->mergsorttranzites($this->bestroutes,$this->costestmiation,$this->numbers,$this->besttypes,$finalbestroutesres,$finalnumbersres,$finalcostestimationres,$finalbesttypesres);
-       //print_r($finalnumbersres);
+        //print_r($finalnumbersres);
 
         return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$arrival)->with('numbers',$this->numbers);
     }
@@ -207,7 +207,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
 
         if($location!=$destination&&count(array_unique($this->tranzites))<=2) {
             $this->Routes[$location] = $this->findchilds($location);
-            if(count($this->Routes[$location]>0)) {
+            if(count($this->Routes[$location])>0) {
                 foreach ($this->Routes as $key => $value) {
                     if ($key == $location) {
                         for ($i = 0; $i < count($value); $i += 2) {
@@ -224,7 +224,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                     //echo $this->costtillnow;
                                     //echo "<br>";
 
-                                        $this->constructgraph($st['street_name'], $destination);
+                                    $this->constructgraph($st['street_name'], $destination);
 
                                     $this->costtillnow-=$transportneeded->Ticket_cost;
                                     //echo $this->costtillnow;
@@ -333,7 +333,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     }
     public function index()
     {
-       
+
         //
     }
     /**
@@ -399,34 +399,34 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
 
     public function filtercost(Request $request){
         $a = unserialize($request->costestimation);
-    
-       $this->costestmiation =  $a;
-       $this->bestroutes = unserialize($request->bestroutes);
-       
-       $this->besttypes =  unserialize($request->besttypes);
-       $this->numbers =  unserialize($request->numbers);
-      
-       for($i = 0 ; $i < count($this->bestroutes) ; $i++){
-        for($j=$i+1;$j<count($this->bestroutes);$j++){
-           
-            if($this->costestmiation[$i]<$this->costestmiation[$j]){
-                $temp =$this->bestroutes[$i];
-                $this->bestroutes[$i]=$this->bestroutes[$j];
-                $this->bestroutes[$j]=$temp;
-                $temp=$this->numbers[$i];
-                $this->numbers[$i]=$this->numbers[$j];
-                $this->numbers[$j]=$temp;
-                $temp=$this->costestmiation[$i];
-                $this->costestmiation[$i]=$this->costestmiation[$j];
-                $this->costestmiation[$j]=$temp;
-                $temp=$this->besttypes[$i];
-                $this->besttypes[$i]=$this->besttypes[$j];
-                $this->besttypes[$j]=$temp;
+
+        $this->costestmiation =  $a;
+        $this->bestroutes = unserialize($request->bestroutes);
+
+        $this->besttypes =  unserialize($request->besttypes);
+        $this->numbers =  unserialize($request->numbers);
+
+        for($i = 0 ; $i < count($this->bestroutes) ; $i++){
+            for($j=$i+1;$j<count($this->bestroutes);$j++){
+
+                if($this->costestmiation[$i]<$this->costestmiation[$j]){
+                    $temp =$this->bestroutes[$i];
+                    $this->bestroutes[$i]=$this->bestroutes[$j];
+                    $this->bestroutes[$j]=$temp;
+                    $temp=$this->numbers[$i];
+                    $this->numbers[$i]=$this->numbers[$j];
+                    $this->numbers[$j]=$temp;
+                    $temp=$this->costestmiation[$i];
+                    $this->costestmiation[$i]=$this->costestmiation[$j];
+                    $this->costestmiation[$j]=$temp;
+                    $temp=$this->besttypes[$i];
+                    $this->besttypes[$i]=$this->besttypes[$j];
+                    $this->besttypes[$j]=$temp;
+                }
             }
         }
-    }
         $des = $request->destination;
-       return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$des)->with('numbers',$this->numbers);
-    
+        return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$des)->with('numbers',$this->numbers);
+
     }
 }

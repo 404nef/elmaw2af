@@ -39,7 +39,7 @@
         <section id="filters">
         <div class="container">
                 <div class="row">
-                    <div class="col-sm-4 col-xs-12">
+                    <div class="col-sm-4 col-12">
                     <form action="{{route('Filter.cost')}}" method="post">
                     {{csrf_field()}}
                     <input type="hidden" name="costestimation" value="{{serialize($costestimation)}}">
@@ -47,19 +47,35 @@
                     <input type="hidden" name="besttypes" value="{{ serialize($besttypes) }}">
                     <input type="hidden" name="numbers" value="{{ serialize($numbers) }}">
                     <input type="hidden" name="destination" value="{{ $destination }}">
+                    <input type="hidden" name="besttime" value="{{ serialize($besttime) }}">
 
                     <button class="btn btn-block btn-success" type="submit"><i class="far fa-money-bill-alt"></i>
 
-  Cost</button>
+                    Cost</button>
                     </form>
                     </div>
-                    <div class="col-sm-4 col-xs-12">
+                    <div class="col-sm-4 col-12">
                     <form action="/" method="get">
                     {{csrf_field()}}
                     <button class="btn btn-block btn-primary" type="submit"><i class="fas fa-home"></i>
 
    Back to home</button>
                     </form>
+                    </div>
+                    <div class="col-sm-4 col-12">
+                        <form action="{{route('Filter.time')}}" method="post">
+                            {{csrf_field()}}
+                            <input type="hidden" name="costestimation" value="{{serialize($costestimation)}}">
+                            <input type="hidden" name="bestroutes" value="{{ serialize($bestroutes) }}">
+                            <input type="hidden" name="besttypes" value="{{ serialize($besttypes) }}">
+                            <input type="hidden" name="numbers" value="{{ serialize($numbers) }}">
+                            <input type="hidden" name="destination" value="{{ $destination }}">
+                            <input type="hidden" name="besttime" value="{{ serialize($besttime) }}">
+
+                            <button class="btn btn-block btn-danger" type="submit"><i class="far fa-money-bill-alt"></i>
+
+                                Time</button>
+                        </form>
                     </div>
                     
 
@@ -73,7 +89,7 @@
             <div class="container">
                 <div class="row wrapper">
                     @for($i = 0 ; $i < count($bestroutes); $i++)
-                    <div class="col-sm-12 col-xs-12 ">
+                    <div class="col-sm-12 col-12 ">
                         <div class="card text-center routes align-content  border-rounded mb-3">
                             <div class="card-body text-center ">
                                 <h5 class="card-title"><strong><i class="fas fa-road"></i> Route {{$i+1}}</strong></h5>
@@ -98,7 +114,7 @@
                             <div class="card-footer  text-white bg-success">
                                 <strong>Cost estimated : {{$costestimation[$i]}} <i class="far fa-money-bill-alt"></i></strong>
                                 <br>
-                                <strong>Time estimated : 30 <i class="fas fa-clock"></i></strong>
+                                <strong>Time estimated : {{$besttime[$i]}} <i class="fas fa-clock"></i></strong>
                             </div>
 
 
@@ -116,7 +132,7 @@
         </section>
 
 
-
+    @if(Auth::user())
     <!--Review Section-->
         <section id="reviews">
             <div class="container ">
@@ -163,6 +179,7 @@
                 </div>
             </div>
         </section>
+    @endif
         <script>
                 
                 $(document).ready(function(e){

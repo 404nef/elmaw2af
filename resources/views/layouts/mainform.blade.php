@@ -36,7 +36,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <button class="btn btn-primary form-control" type="submit"><h3>YALLA !</h3></button>
+                                <button class="btn btn-primary form-control" type="button" id="display_transport_form"><h3>YALLA !</h3></button>
                             </form>
 
                         </div>

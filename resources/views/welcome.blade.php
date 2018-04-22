@@ -35,6 +35,10 @@
     </head>
     <body>
 
+    <div class="se-pre-con" style="display: none">
+        <h1>Please wait</h1>
+    </div>
+    <div class="hide-loader">
     <!--Donate section-->
     <section id="donatesection">
         <div class="alert alert-primary text-center alert-dismissible fade show align-items-center" role="alert">
@@ -56,6 +60,8 @@
             </button>
         </div>
     </section>
+
+
 
     <!--IntroSection-->
     @include('layouts.mainform')
@@ -185,13 +191,12 @@
     <!--Top button section -->
     <button onclick="topFunction()" id="myBtn" title="Go to top"><i class="fas fa-angle-up"></i></button>
 
-
+    </div>
 
     <!--To top buttopn scrtip-->
     <script>
         // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = function() {scrollFunction()};
-
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
                 document.getElementById("myBtn").style.display = "block";
@@ -199,15 +204,52 @@
                 document.getElementById("myBtn").style.display = "none";
             }
         }
-
         // When the user clicks on the button, scroll to the top of the document
         function topFunction() {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
+            window.scroll({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
         }
     </script>
 
     <!--FadeinFunctionFroTrnasports-->
+    <style>
+        .se-pre-con {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url('/255.gif') center no-repeat #fff;
+        }
+        .se-pre-con h1 {
+            position: absolute;
+            width: 100%;
+            bottom: 10%;
+            text-align: center;
+        }
+    </style>
+    <!-- loader Icon -->
+    <script>
+        $(document).ready(function () {
+            $('#display_transport_form').click(function (e) {
+                e.preventDefault();
+                var location = $('#location').val();
+                var destination = $('#destination').val();
+                if(location != destination) {
+                    $(this).parent().submit();
+                    $('.se-pre-con').show();
+                }
+                else
+                {
+                    alert("Please choose different Destination");
+                }
+            });
+        })
+    </script>
 
 
     </body>

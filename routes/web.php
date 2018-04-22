@@ -12,8 +12,22 @@
 */
 
 Route::get('/', function () {
-    return view('welcome')->with('streets',\App\Street::all());
-});
+    $street_count = count(\App\Street::all());
+    $users_count = count(\App\User::all());
+    $transport_count = count(\App\Transport::all());
+    return view('new_home')->with('streets',\App\Street::orderBy('street_name')->get())->with('street_count',$street_count)->with('transport_count',$transport_count)->with('users_count',$users_count);
+})->name('homepage');
+
+Route::get('/#team', function () {
+    $street_count = count(\App\Street::all());
+    $users_count = count(\App\User::all());
+    $transport_count = count(\App\Transport::all());
+    return view('new_home')->with('streets',\App\Street::orderBy('street_name')->get())->with('street_count',$street_count)->with('transport_count',$transport_count)->with('users_count',$users_count);
+})->name('team');
+
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
 
 Auth::routes();
 
@@ -45,3 +59,7 @@ Route::post('/Sendreview',[
     'uses'=>'GraphController@filtercost',
      'as'=>'Filter.cost',
  ]);
+Route::post('/filterbytime',[
+    'uses'=>'GraphController@filtertime',
+    'as'=>'Filter.time',
+]);
