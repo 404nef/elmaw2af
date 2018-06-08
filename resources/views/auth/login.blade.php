@@ -1,16 +1,20 @@
-@extends('layouts.app')
+@include('layouts.new_app')
 
-@section('content')
+
+<style>
+    #loginsection{
+        padding: 50px;
+    }
+</style>
+
+<section id="loginsection">
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row justify-content-center text-center">
+        <div class="col-md-12">
             <div class="card card-default">
-                <div class="card-header">Login</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-
                         <div class="form-group row">
                             <label for="email" class="col-sm-4 col-form-label text-md-right">E-Mail Address</label>
 
@@ -50,7 +54,7 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
+                            <div class="col-md-12 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     Login
                                 </button>
@@ -66,4 +70,5 @@
         </div>
     </div>
 </div>
-@endsection
+</section>
+@include('layouts.new_footer')

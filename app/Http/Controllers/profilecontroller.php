@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
-use App\Review;
 use Illuminate\Support\Facades\Auth;
 
-class ReviewsController extends Controller
+class profilecontroller extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('useronly');
+    }
+
     public function index()
     {
-        //
+       $user = User::find(Auth::id());
+       return view('Users.edit')->with('histories',$user->histories);
     }
 
     /**
@@ -27,10 +33,6 @@ class ReviewsController extends Controller
     {
         //
     }
-    public function __construct()
-    {
-        $this->middleware('useronly');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -40,21 +42,7 @@ class ReviewsController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $this->validate($request,[
-                "review"=>"required",
-        ]);
-
-        $rev = new Review;
-        $rev->email = Auth::user()->email;
-        $rev->content  = $request->review;
-        $rev->save();
-        
-
-        
-        return redirect('/Review');
-        
-
+        //
     }
 
     /**
@@ -86,9 +74,29 @@ class ReviewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $this->validate($request,[
+           'email'=>'required',
+           'username'=>'required',
+
+        ]);
+
+        $user = User::find(Auth::id());
+        ;
+        $userneeded = User::where('id',Auth::id())->get()->first();
+
+        if($request->password!=null&&$request->password!=''){
+            $userneeded->password = bcrypt($request->password);
+        }
+
+        $userneeded->email = $request->email;
+        $userneeded->name  = $request->username;
+
+        $userneeded->update();
+        $userneeded->save();
+
+        return redirect()->back()->with('histories',$user->histories);
     }
 
     /**

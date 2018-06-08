@@ -10,6 +10,9 @@
             background-attachment: fixed;
             background-size: cover;
         }
+        #myhistory{
+            padding: 50px;
+        }
     </style>
 </head>
 <body>
@@ -17,7 +20,7 @@
 
 <section id="greetings">
     <div class="container text-center text-white">
-        <h1 class="display-3">Hello,Username !</h1>
+        <h1 class="display-3">Hello,{{\Illuminate\Support\Facades\Auth::user()->name}} !</h1>
     </div>
 </section>
 
@@ -26,44 +29,34 @@
     <div class="container" id="infosection"><!--Containerstart-->
         <div class="row"><!--rowstart-->
 
-            <div class="col-md-9"><!--col1start-->
+            <div class="col-md-12"><!--col1start-->
 
-            <form action="" enctype="multipart/form-data">
+            <form action="{{route('Edit.profile')}}" enctype="multipart/form-data" method="post">
                 {{csrf_field()}}
                 <div class="card mt-5">
                     <div class="card-header">
-                        Infro
+                        Info
                     </div>
                     <div class="card-body">
 
                         <div class="form-group">
                             <label for="Email">Email</label>
-                            <input type="email" class="form-control" name="email" id="email" placeholder="example@example.com">
+                            <input type="email" value="{{\Illuminate\Support\Facades\Auth::user()->email}}" class="form-control" name="email" id="email" placeholder="example@example.com">
                         </div>
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" name="username" id="username" class="form-control" placeholder="Username">
+                            <input type="text" name="username" value="{{\Illuminate\Support\Facades\Auth::user()->name}}" id="username" class="form-control" placeholder="Username">
                         </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="password">
+                        </div>
+                        <div class="d-flex flex-row justify-content-center form-group"><button class="btn btn-primary btn-block" type="submit"><i class="far fa-save mr-2"></i>Save changes</button></div>
 
                     </div>
                 </div>
-                
-            </div><!--col1end-->
-
-            <div class="col-md-3 verticalLine"><!--col2start-->
-
-
-            <div class="d-flex flex-row justify-content-center form-group"><img src="{{asset('avatar.jpg')}}" class="img-fluid rounded-circle" style="width: 200px;height: 200px;" alt=""></div>
-            <div class="d-flex flex-row justify-content-center form-group text-white"><label class="btn btn-warning btn-block btn-file">
-                    <i class="far fa-file-image  mr-1"></i>  Edit avatar <input type="file" style="display: none;">
-                </label>
-            </div>
-             <div class="d-flex flex-row justify-content-center form-group"><button class="btn btn-primary btn-block" type="submit"><i class="far fa-save mr-2"></i>Save changes</button></div>
              </form>
-            <div class="d-flex flex-row justify-content-center form-group" data-toggle="modal" data-target="#changepasswordmodal"><button class="btn btn-danger btn-block" type="submit"><i class="fas fa-unlock mr-1"></i>Change password</button></div>
-
-
-
             </div><!--col2end-->
 
 
@@ -73,46 +66,49 @@
 </section>
 
 
+<section id="myhistory ">
+    <div class="container text-center">
+        <h1 class="display-5">My History</h1>
+        <table class="table text-center">
+            <thead>
+            <tr>
+                <th scope="col">From</th>
+                <th scope="col">To</th>
+                <th scope="col">Go</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{count($histories)}}
+            @foreach($histories as $history)
+            <tr>
 
-
-
-
-
-
-<!--ChangePasswordModal-->
-<div class="modal fade" id="changepasswordmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-center text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Change password</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action=""  enctype="multipart/form-data">
-                    {{csrf_field()}}
-                    <div class="form-group">
-                        <label for="oldpassword">Old</label>
-                        <input type="password" class="form-control" name="oldpassword" id="oldpassword">
-                    </div>
-                    <div class="form-group">
-                        <label for="newpassword">New Password</label>
-                        <input type="password" class="form-control" name="newpassword" id="newpassword">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmnewpassword">Confirm new password</label>
-                        <input type="password" class="form-control" name="confirmnewpassword" id="confirmnewpassword">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger">Save changes</button>
-            </div>
-        </div>
+                <td>{{\App\Street::find($history->from_id)->street_name}}</td>
+                <td>{{\App\Street::find($history->to_id)->street_name}}</td>
+                <td>
+                    <form action="{{route('Graph.start')}}" method="post">
+                        {{csrf_field()}}
+                        <div class="form-group">
+                            <input type="hidden" name="location" value="{{$history->from_id}}">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" name="destination" value="{{$history->to_id}}">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary">YALLA</button>
+                        </div>
+                    </form></td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
     </div>
-</div>
+</section>
+
+
+
+
+
+
 
 
 

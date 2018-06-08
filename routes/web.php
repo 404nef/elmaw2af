@@ -36,9 +36,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/result', function () {
     return view('result');
 });
-Route::get('/editmyprofile', function () {
-    return view('Users.edit');
-});
+Route::get('/Viewprofile', [
+    'uses'=>'profilecontroller@index',
+    'as'=>'Goto'
+]);
 Route::post('/Findpath',[
    "uses"=>"GraphController@startgraph",
     "as"=>"Graph.start"
@@ -54,7 +55,6 @@ Route::post('/Sendreview',[
  ]);
 
 
-
  Route::post('/filterbycost',[
     'uses'=>'GraphController@filtercost',
      'as'=>'Filter.cost',
@@ -62,4 +62,65 @@ Route::post('/Sendreview',[
 Route::post('/filterbytime',[
     'uses'=>'GraphController@filtertime',
     'as'=>'Filter.time',
+]);
+Route::post('/filterbytransport',[
+    'uses'=>'GraphController@sortaccordingtranzites',
+    'as'=>'Filter.transport',
+]);
+
+Route::get('/Review', function () {
+    return view('thanks');
+});
+
+
+Route::post('/Editmyprofile',[
+    'uses'=>'profilecontroller@update',
+    'as'=>'Edit.profile'
+]);
+
+Route::get('/Login',function (){
+    return view('auth.login');
+});
+
+Route::get('/SignUp',function (){
+    return view('auth.register');
+});
+
+
+Route::get('/Viewreview/{id}',[
+    'uses'=>'Admincontroller@returnreview',
+    'as'=>'review.view',
+]);
+
+Route::post('/Save',[
+    'uses'=>'Admincontroller@editneeded',
+    'as'=>'Admin.save'
+]);
+
+Route::get('/AdminIndex',[
+    'uses'=>"Admincontroller@index",
+    'as'=>'Admin.index'
+]);
+Route::post('/AddTransport',[
+    'uses'=>'Admincontroller@AddTransport',
+    'as'=>'Add.transport',
+]);
+
+
+Route::post('/Addstreett',[
+    'uses'=>'Admincontroller@Addstreet',
+    'as'=>'Add.street',
+]);
+Route::post('/AdminView',[
+   'uses'=>'Admincontroller@show',
+    'as'=>'Admin.show'
+]);
+
+Route::post('/Edit',[
+    'uses'=>'Admincontroller@returnediting',
+    'as'=>'Admin.edit'
+]);
+Route::post('/delete',[
+    'uses'=>'Admincontroller@delete',
+    'as'=>'Admin.remove'
 ]);

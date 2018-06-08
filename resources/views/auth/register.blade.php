@@ -1,16 +1,21 @@
-@extends('layouts.app')
+@include('layouts.new_app')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<style>
+    #registerform{
+        padding: 50px;
+
+    }
+</style>
+
+
+<section id="registerform" class="mt-5">
+<div class="container  justify-content-center text-center ">
+    <div class="row ">
+        <div class="col-md-12">
             <div class="card card-default">
-                <div class="card-header">Register</div>
-
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
-
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
 
@@ -62,7 +67,7 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
+                            <div class="col-md-12 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
                                     Register
                                 </button>
@@ -74,4 +79,6 @@
         </div>
     </div>
 </div>
-@endsection
+</section>
+
+@include('layouts.new_footer')

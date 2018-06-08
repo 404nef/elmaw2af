@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 use App\Street;
 use App\Transport;
+use App\Userhistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;class GraphController extends Controller
 {
     /**
@@ -28,7 +30,11 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
     public $besttypes=[];
     public $failed=[];
     public $roadtodestination=[];
+    public $besttime=[];
+    public $routescount=0;
     public $done=false;
+    public $currentlatlong =[];
+    public  $bestlatlong=[];
 
 
 
@@ -53,7 +59,7 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
 
     public function GetDrivingDistance($lat1, $lat2, $long1, $long2)
     {
-        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins="."30.049374".","."31.274628"."&destinations="."30.066912".","."31.285209"."&mode=driving&language=pl-PL";
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$lat1.",".$long1."&destinations=".$lat2.",".$long2."&mode=driving&language=pl-PL";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -63,94 +69,23 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
         $response_a = json_decode($response, true);
-        $dist = $response_a['rows'][0]['elements'][0]['distance']['text'];
-        $time = $response_a['rows'][0]['elements'][0]['duration']['text'];
-        print_r (array('distance' => $dist, 'time' => $time));
-    }
-    public function mergsorttranzites(&$bestroutes,&$costetimation,&$number,&$besttypes,&$finalbestroutesres,&$finalnumbersres,&$finalcostestimationres,&$finalbesttypesres){
+        //$dist = $response_a['rows'][0]['elements'][0]['distance']['text'];
+        $time = ceil($response_a['rows'][0]['elements'][0]['duration']['value']/60);
 
-        if(count($bestroutes)==1){
-            return ;
-        }
-        $leftbestroute =[];
-        $rightbestroute = [];
-        $leftnumbers =[];
-        $rightnumbers = [];
-        $leftcostestmiation =[];
-        $rightcostestmiation = [];
-        $leftbesttypes=[];
-        $rightbesttypes = [];
+        //print_r(array('distance' => $dist, 'time' =
 
-
-        $middle = (int) ( count($bestroutes)/2 );
-
-        for( $i=0; $i < $middle; $i++ ){
-            $leftbestroute[]=$bestroutes[$i];
-            $leftnumbers[]=$number[$i];
-            $leftcostestmiation[]=$costetimation[$i];
-            $leftbesttypes[]=$besttypes[$i];
-        }
-
-        // Make right
-        for( $i = $middle; $i < count($bestroutes); $i++ ){
-            $rightbestroute[]=$bestroutes[$i];
-            $rightnumbers[]=$number[$i];
-            $rightcostestmiation[]=$costetimation[$i];
-            $rightbesttypes[]=$besttypes[$i];
-        }
-
-        $this->mergsorttranzites($leftbestroute,$leftcostestmiation,$leftnumbers,$leftbesttypes,$finalbestroutesres,$finalnumbersres,$finalcostestimationres,$finalbesttypesres);
-        $this->mergsorttranzites($rightbestroute,$rightcostestmiation,$rightnumbers,$rightbesttypes,$finalbestroutesres,$finalnumbersres,$finalcostestimationres,$finalbesttypesres);
-        $this->mergetwoarrays($leftbestroute,$rightbestroute,$leftcostestmiation,$rightcostestmiation,$leftnumbers,$rightnumbers,$leftbesttypes,$rightbesttypes,$finalbestroutesres,$finalnumbersres,$finalcostestimationres,$finalbesttypesres);
-        //return;
-
+        return $time;
+        //return array('distance' => $dist, 'time' => $time);
 
     }
-    public function mergetwoarrays(&$leftbestroute,&$rightbestroute,&$leftcostestmiation,&$rightcostestmiation,&$leftnumbers,&$rightnumbers,&$leftbesttypes,&$rightbesttypes,&$finalbestroutesres,&$finalnumbersres,&$finalcostestimationres,&$finalbesttypesres){
+    public function sortaccordingtranzites(Request $request){
+        $a = unserialize($request->costestimation);
 
-        $resultbesttoutes = [];
-        $resultnumbers = [];
-        $resultbesttypes = [];
-        $resultcostestimation = [];
-
-        while(count($leftbestroute) > 0 || count($rightbestroute) > 0){
-            if(count($leftbestroute) > 0 && count($rightbestroute) > 0){
-                if($leftnumbers[0] < $rightnumbers[0]){
-                    $resultbesttoutes[]=array_shift($leftbestroute);
-                    $resultnumbers []= array_shift($leftnumbers);
-                    $resultbesttypes []= array_shift($leftbesttypes);
-                    $resultcostestimation []= array_shift($leftcostestmiation) ;
-                } else {
-                    $resultbesttoutes[]=array_shift($rightbestroute);
-                    $resultnumbers []= array_shift($rightnumbers);
-                    $resultbesttypes []= array_shift($rightbesttypes);
-                    $resultcostestimation []= array_shift($rightcostestmiation) ;
-                }
-            } elseif (count($leftbestroute) > 0){
-                $resultbesttoutes[]=array_shift($leftbestroute);
-                $resultnumbers []= array_shift($leftnumbers);
-                $resultbesttypes []= array_shift($leftbesttypes);
-                $resultcostestimation []= array_shift($leftcostestmiation) ;
-            } elseif (count($rightbestroute) > 0){
-                $resultbesttoutes[]=array_shift($rightbestroute);
-                $resultnumbers []= array_shift($rightnumbers);
-                $resultbesttypes []= array_shift($rightbesttypes);
-                $resultcostestimation []= array_shift($rightcostestmiation) ;
-            }
-
-
-
-        }
-        print_r($resultnumbers);
-        /*$finalbestroutesres=$resultbesttoutes;
-        $finalbesttypesres=$resultbesttypes;
-        $finalcostestimationres=$resultcostestimation;
-        $finalnumbersres=$resultnumbers;
-        */
-        //return ;
-
-    }
-    public function sortaccordingtranzites(){
+        $this->costestmiation =  $a;
+        $this->bestroutes = unserialize($request->bestroutes);
+        $this->bestlatlong = unserialize($request->bestlatlong);
+        $this->besttypes =  unserialize($request->besttypes);
+        $this->numbers =  unserialize($request->numbers);
         for($i = 0 ; $i < count($this->bestroutes) ; $i++){
             for($j=$i+1;$j<count($this->bestroutes);$j++){
                 if($this->numbers[$i]>$this->numbers[$j]){
@@ -166,41 +101,46 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                     $temp=$this->besttypes[$i];
                     $this->besttypes[$i]=$this->besttypes[$j];
                     $this->besttypes[$j]=$temp;
+                    $temp=$this->bestlatlong[$i];
+                    $this->bestlatlong[$i]=$this->bestlatlong[$j];
+                    $this->bestlatlong[$j]=$temp;
+
                 }
             }
         }
+        $des = $request->destination;
+        return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$des)->with('numbers',$this->numbers)->with('bestlatlong',$this->bestlatlong);
     }
     public function startgraph(Request $request){
+
+
         $this->initiallocation=Street::find($request->location)->street_name;
         $arrival = Street::find($request->destination)->street_name;
-        //$transports = DB::table('street_transport')->where('street_id',$request->destination)->get();
 
-        //echo "<br><br><br><br>";
-        //echo "Childs of" .$location."<br>";
-        //print_r($this->currentroute);
+        if(Auth::check()) {
+            $historyresults = Userhistory::where('user_id',Auth::user()->id)->where('from_id',$request->location)->where('to_id',$request->destination)->get()->first();
 
+
+            if ($historyresults == null) {
+                $newhist = new Userhistory();
+                $newhist->user_id = Auth::user()->id;
+                $newhist->from_id = $request->location;
+                $newhist->to_id = $request->destination;
+                $newhist->save();
+            }
+
+        }
 
         $this->constructgraph($this->initiallocation,$arrival);
-
-        $finalbestroutesres=[];
-
-        $finalnumbersres=[];
-
-        $finalcostestimationres=[];
-
-        $finalbesttypesres=[];
-        $this->sortaccordingtranzites();
-        //print_r($this->numbers);
-        //$this->mergsorttranzites($this->bestroutes,$this->costestmiation,$this->numbers,$this->besttypes,$finalbestroutesres,$finalnumbersres,$finalcostestimationres,$finalbesttypesres);
-        //print_r($finalnumbersres);
-
-        return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$arrival)->with('numbers',$this->numbers);
+        return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$arrival)->with('numbers',$this->numbers)->with('bestlatlong',$this->bestlatlong);
     }
     public function constructgraph($location,$destination){
         $this->initialdestination=Street::where('street_name',$destination)->first();
+        $loc = Street::where('street_name',$location)->first();
         if($location==$this->initiallocation) {
             array_push($this->currentroute, $location);
             array_push($this->currentroute, -1);
+            array_push($this->currentlatlong,$loc->lat,$loc->lang);
         }
         //print_r($this->currentroute);
         //print_r($this->bestroutes);
@@ -220,6 +160,8 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                     array_push($this->currentroute, $transportneeded->Transport_number);
                                     array_push($this->tranzites, $value[$i + 1]);
                                     array_push($this->types,$transportneeded->Transport_type);
+                                    array_push($this->currentlatlong,$st['lat']);
+                                    array_push($this->currentlatlong,$st['lang']);
                                     $this->costtillnow+=$transportneeded->Ticket_cost;
                                     //echo $this->costtillnow;
                                     //echo "<br>";
@@ -231,11 +173,15 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                     //echo "<br>";
                                     array_pop($this->currentroute);
                                     array_pop($this->currentroute);
+                                    array_pop($this->currentlatlong);
+                                    array_pop($this->currentlatlong);
                                     array_pop($this->tranzites);
                                     array_pop($this->types);
                                 }else if ($value[$i+1]==$this->tranzites[count($this->tranzites)-1]&&in_array($value[$i + 1],$this->tranzites)){
                                     array_push($this->currentroute, $st['street_name']);
                                     array_push($this->currentroute, $transportneeded->Transport_number);
+                                    array_push($this->currentlatlong,$st['lat']);
+                                    array_push($this->currentlatlong,$st['lang']);
                                     array_push($this->tranzites, $value[$i + 1]);
                                     array_push($this->types,$transportneeded->Transport_type);
                                     if(true) {
@@ -243,13 +189,19 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                     }else{
                                         if (!in_array($this->currentroute,$this->bestroutes)) {
                                             array_push($this->bestroutes, $this->currentroute);
+                                            array_push($this->currentlatlong,$this->initialdestination->lat,$this->initialdestination->lang);
                                             array_push($this->numbers,count(array_unique($this->tranzites)));
                                             array_push($this->costestmiation,$this->costtillnow);
                                             array_push($this->besttypes,$this->types);
+                                            array_push($this->bestlatlong,$this->currentlatlong);
+                                            array_pop($this->currentlatlong);
+                                            array_pop($this->currentlatlong);
 
 
                                         }
                                     }
+                                    array_pop($this->currentlatlong);
+                                    array_pop($this->currentlatlong);
                                     array_pop($this->currentroute);
                                     array_pop($this->currentroute);
                                     array_pop($this->tranzites);
@@ -262,6 +214,8 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                 array_push($this->currentroute, $st['street_name']);
                                 array_push($this->currentroute, $transportneeded->Transport_number);
                                 array_push( $this->tranzites,$value[$i + 1]);
+                                array_push($this->currentlatlong,$st['lat']);
+                                array_push($this->currentlatlong,$st['lang']);
                                 $this->costtillnow+=$transportneeded->Ticket_cost;
                                 //echo $this->costtillnow;
                                 //echo "<br>";
@@ -271,6 +225,8 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                                 $this->costtillnow-=$transportneeded->Ticket_cost;
                                 //echo $this->costtillnow;
                                 //echo "<br>";
+                                array_pop($this->currentlatlong);
+                                array_pop($this->currentlatlong);
                                 array_pop($this->currentroute);
                                 array_pop($this->currentroute);
                                 array_pop($this->tranzites);
@@ -286,15 +242,13 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
             if($location==$destination) {
                 if (!in_array($this->currentroute,$this->bestroutes)) {
                     array_push($this->bestroutes, $this->currentroute);
+                    array_push($this->currentlatlong,$this->initialdestination->lat,$this->initialdestination->lang);
                     array_push($this->numbers,count(array_unique($this->tranzites)));
                     array_push($this->costestmiation,$this->costtillnow);
                     array_push($this->besttypes,$this->types);
-
-
-                }else{
-
-                    array_push($this->failed,$this->currentroute);
-
+                    array_push($this->bestlatlong,$this->currentlatlong);
+                    array_pop($this->currentlatlong);
+                    array_pop($this->currentlatlong);
                 }
             }
         }
@@ -402,14 +356,12 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
 
         $this->costestmiation =  $a;
         $this->bestroutes = unserialize($request->bestroutes);
-
+        $this->bestlatlong=unserialize($request->bestlatlong);
         $this->besttypes =  unserialize($request->besttypes);
         $this->numbers =  unserialize($request->numbers);
-
         for($i = 0 ; $i < count($this->bestroutes) ; $i++){
             for($j=$i+1;$j<count($this->bestroutes);$j++){
-
-                if($this->costestmiation[$i]<$this->costestmiation[$j]){
+                if($this->costestmiation[$i]>$this->costestmiation[$j]){
                     $temp =$this->bestroutes[$i];
                     $this->bestroutes[$i]=$this->bestroutes[$j];
                     $this->bestroutes[$j]=$temp;
@@ -422,6 +374,44 @@ use Illuminate\Support\Facades\DB;class GraphController extends Controller
                     $temp=$this->besttypes[$i];
                     $this->besttypes[$i]=$this->besttypes[$j];
                     $this->besttypes[$j]=$temp;
+                    $temp=$this->bestlatlong[$i];
+                    $this->bestlatlong[$i]=$this->bestlatlong[$j];
+                    $this->bestlatlong[$j]=$temp;
+
+                }
+            }
+        }
+        $des = $request->destination;
+        return view('result')->with('bestroutes',$this->bestroutes)->with('costestimation',$this->costestmiation)->with('besttypes',$this->besttypes)->with("destination",$des)->with('numbers',$this->numbers)->with('bestlatlong',$this->bestlatlong);
+
+    }
+    public function filtertime(Request $request){
+        $a = unserialize($request->costestimation);
+
+        $this->costestmiation =  $a;
+        $this->bestroutes = unserialize($request->bestroutes);
+        $this->bestlatlong=unserialize($request->bestlatlong);
+        $this->besttypes =  unserialize($request->besttypes);
+        $this->numbers =  unserialize($request->numbers);
+        for($i = 0 ; $i < count($this->bestroutes) ; $i++){
+            for($j=$i+1;$j<count($this->bestroutes);$j++){
+                if($this->numbers[$i]>$this->numbers[$j]){
+                    $temp =$this->bestroutes[$i];
+                    $this->bestroutes[$i]=$this->bestroutes[$j];
+                    $this->bestroutes[$j]=$temp;
+                    $temp=$this->numbers[$i];
+                    $this->numbers[$i]=$this->numbers[$j];
+                    $this->numbers[$j]=$temp;
+                    $temp=$this->costestmiation[$i];
+                    $this->costestmiation[$i]=$this->costestmiation[$j];
+                    $this->costestmiation[$j]=$temp;
+                    $temp=$this->besttypes[$i];
+                    $this->besttypes[$i]=$this->besttypes[$j];
+                    $this->besttypes[$j]=$temp;
+                    $temp=$this->bestlatlong[$i];
+                    $this->bestlatlong[$i]=$this->bestlatlong[$j];
+                    $this->bestlatlong[$j]=$temp;
+
                 }
             }
         }

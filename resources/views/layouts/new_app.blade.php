@@ -28,6 +28,7 @@
         </div>
         <div class="top-nav-text">
             <div class="nav-contact-w3ls"><i class="fa fa-phone" aria-hidden="true"></i><p>+0(15) 501 124 17</p></div>
+            
         </div>
         <!-- navbar-header -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -35,6 +36,19 @@
                 <li><a class="hvr-underline-from-center" href="/">Home</a></li>
                 <li><a href="{{route('team')}}" class="hvr-underline-from-center scroll scroll">Team</a></li>
                 <li><a href="/contact" class="hvr-underline-from-center">Contact</a>
+                @if(!\Illuminate\Support\Facades\Auth::check())
+                <li><a href="/Login" class="hvr-underline-from-center scroll scroll">Login</a></li>
+                <li><a href="/SignUp" class="hvr-underline-from-center scroll scroll">Sign Up</a></li>
+                @else
+                    <a class="hvr-underline-from-center scroll scroll" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+                        Logout </a>
+                    <li><a href="{{route('Goto')}}" class="hvr-underline-from-center scroll scroll">My profile</a></li>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                @endif
             </ul>
         </div>
 
