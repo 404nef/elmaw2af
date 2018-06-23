@@ -15,7 +15,7 @@ class CreateTransportsTable extends Migration
     {
         Schema::create('transports', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer("Transport_number");
+            $table->string("Transport_number");
             $table->string('Transport_type');
             $table->float('Ticket_cost');
             $table->timestamps();

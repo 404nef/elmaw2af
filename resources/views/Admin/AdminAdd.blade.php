@@ -11,7 +11,7 @@
 <section id="buttons">
     <div class="container text-center justify-content-center">
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-6">
 
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddtransportModal">
@@ -19,21 +19,14 @@
                 </button>
 
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
 
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#AddStreetmodal">
                     Add Street
                 </button>
 
             </div>
-            <div class="col-sm-4">
 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddRouteModal">
-                    Add Route
-                </button>
-
-
-            </div>
         </div>
 
 

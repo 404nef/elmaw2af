@@ -9,6 +9,9 @@
     #contentsection{
         border-radius: 5px;
     }
+    .container{
+        min-height: 50vh;
+    }
 
 </style>
 

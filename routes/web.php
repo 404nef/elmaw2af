@@ -124,3 +124,9 @@ Route::post('/delete',[
     'uses'=>'Admincontroller@delete',
     'as'=>'Admin.remove'
 ]);
+
+Route::get('/custom',function (){
+
+    dd(config('app.developers'));
+});
+

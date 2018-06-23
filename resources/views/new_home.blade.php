@@ -53,30 +53,7 @@
 <!-- //Slider -->
 
     <!--TypesOfTransports-->
-    <section id="TypesOfTransports" class="col-xs-12">
-        <div class="container">
-            <div class="heading">
-                <h3>Types of Transports</h3>
-            </div>
-            <div class="container">
-            <div class="row wrapper text-center">
-                <div class="col-md-4 col-xs-12 text-center">
-                    <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mb-1" width="250" height="250">
-                    <h1 class="display-2 text-success">Bus</h1>
-                </div>
-                <div class="col-md-4 col-xs-12 text-center">
-                    <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mb-5" width="250" height="250">
-                    <h1 class="display-2 text-primary">Metro</h1>
 
-                </div>
-                <div class="col-md-4 col-xs-12 text-center">
-                    <img src="{{asset('microbus.png')}}" class="img-fluid rounded-circle mb-5" width="250" height="250">
-                    <h1 class="display-2 text-danger">MicroBus</h1>
-                </div>
-            </div>
-        </div>
-        </div>
-    </section>
     <!-- team -->
     <div class="team" id="team">
         <div class="container">
@@ -92,20 +69,20 @@
                             <div class="rotate">
                                 <p class="group1">
                                     <a href="#">
-                                        <i class="fa fa-twitter"></i>
+                                        <i class="fab fa-twitter"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-facebook"></i>
+                                        <i class="fab fa-facebook"></i>
                                     </a>
                                 </p>
                                 <hr>
                                 <hr>
                                 <p class="group2">
                                     <a href="#">
-                                        <i class="fa fa-instagram"></i>
+                                        <i class="fab fa-instagram"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-dribbble"></i>
+                                        <i class="fab fa-dribbble"></i>
                                     </a>
                                 </p>
                             </div>
@@ -122,20 +99,20 @@
                             <div class="rotate">
                                 <p class="group1">
                                     <a href="#">
-                                        <i class="fa fa-twitter"></i>
+                                        <i class="fab fa-twitter"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-facebook"></i>
+                                        <i class="fab fa-facebook"></i>
                                     </a>
                                 </p>
                                 <hr>
                                 <hr>
                                 <p class="group2">
                                     <a href="#">
-                                        <i class="fa fa-instagram"></i>
+                                        <i class="fab fa-instagram"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-dribbble"></i>
+                                        <i class="fab fa-dribbble"></i>
                                     </a>
                                 </p>
                             </div>
@@ -152,20 +129,20 @@
                             <div class="rotate">
                                 <p class="group1">
                                     <a href="#">
-                                        <i class="fa fa-twitter"></i>
+                                        <i class="fab fa-twitter"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-facebook"></i>
+                                        <i class="fab fa-facebook"></i>
                                     </a>
                                 </p>
                                 <hr>
                                 <hr>
                                 <p class="group2">
                                     <a href="#">
-                                        <i class="fa fa-instagram"></i>
+                                        <i class="fab fa-instagram"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-dribbble"></i>
+                                        <i class="fab fa-dribbble"></i>
                                     </a>
                                 </p>
                             </div>
@@ -182,20 +159,20 @@
                             <div class="rotate">
                                 <p class="group1">
                                     <a href="#">
-                                        <i class="fa fa-twitter"></i>
+                                        <i class="fab fa-twitter"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-facebook"></i>
+                                        <i class="fab fa-facebook"></i>
                                     </a>
                                 </p>
                                 <hr>
                                 <hr>
                                 <p class="group2">
                                     <a href="#">
-                                        <i class="fa fa-instagram"></i>
+                                        <i class="fab fa-instagram"></i>
                                     </a>
                                     <a href="#">
-                                        <i class="fa fa-dribbble"></i>
+                                        <i class="fab fa-dribbble"></i>
                                     </a>
                                 </p>
                             </div>
@@ -215,7 +192,7 @@
     <div class="col-md-12 services-bottom">
         <div class="col-md-6 agileits_w3layouts_about_counter_left">
             <div class="countericon">
-                <i class="fa fa-truck" aria-hidden="true"></i>
+                <i class="fas fa-bus"></i><i class="fas fa-subway"></i>
             </div>
             <div class="counterinfo">
                 <p class="counter">{{$transport_count}}</p>
@@ -225,7 +202,7 @@
         </div>
         <div class="col-md-6 agileits_w3layouts_about_counter_left">
             <div class="countericon">
-                <i class="fa fa-fighter-jet" aria-hidden="true"></i>
+                <i class="fas fa-road"></i>
             </div>
             <div class="counterinfo">
                 <p class="counter">{{$street_count}}</p>
@@ -259,6 +236,49 @@
     </div>
     <div class="clearfix"> </div>
     <!-- //Counter -->
+
+
+    <section id="locateus">
+        <div class="w3ls_address_mail_footer_grids">
+            <div class="heading">
+                <h2>locate us</h2>
+            </div>
+            <div class="container">
+                <div class="col-md-8 contactleft">
+                    <div style="width: 100%"><iframe width="100%" height="600" src="https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;coord=30.076735429532363,31.287242165390012&amp;q=+(Our%20location)&amp;ie=UTF8&amp;t=&amp;z=17&amp;iwloc=B&amp;output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.maps.ie/create-google-map/">Create Google Map</a></iframe></div><br />
+                </div>
+                <div class="col-md-4 contactright">
+                    <h3>Contact Address</h3>
+                    <div class="w3ls_footer_grid_left">
+                        <div class="wthree_footer_grid_left">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        </div>
+                        <p>Ain shams university<span>Abbasya</span></p>
+                    </div>
+                    <div class="w3ls_footer_grid_left">
+                        <div class="wthree_footer_grid_left">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                        </div>
+                        <p>+(000) 123 4565 32 <span>+(010) 123 4565 35</span></p>
+                    </div>
+                    <div class="w3ls_footer_grid_left">
+                        <div class="wthree_footer_grid_left">
+                            <i class="fas fa-envelope-square"></i>
+                        </div>
+                        <p><a href="mailto:info@example.com">Elmaw2af@gmail.com</a>
+
+                    </div>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
 
 @include('layouts.new_footer')
 </div>

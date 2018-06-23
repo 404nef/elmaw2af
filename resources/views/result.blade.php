@@ -38,7 +38,11 @@ $time = 0;
 <!--MessageSection-->
 <section id="message">
     <div class="container text-center text-white">
+        @if(count($bestroutes)>0)
         <h1 class="display-3">Hurray we found you a solution !</h1>
+            @else
+            <h1 class="display-3">No solution !</h1>
+        @endif
     </div>
 </section>
 
@@ -141,10 +145,12 @@ $time = 0;
                             @if($j%2!=0&&$bestroutes[$i][$j]!=-1)
                                 <!--type==bus-->
                                     @if($bestroutes[$i][$j]!=$bestroutes[$i][$j-2])
+                                        <?php $t = \App\Transport::where('Transport_number',$bestroutes[$i][$j])->get()->first(); ?>
                                         <div class="d-flex flex-row">
+                                            @if($t->Transport_type=="Bus")
                                             <img src="{{asset('bus.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">{{$bestroutes[$i][$j]}} <br> From {{$bestroutes[$i][$j-3]}} <br> </strong>
-                                            @if($j+1<count($bestroutes[$i]))
-
+                                            @else
+                                                <img src="{{asset('metro.png')}}" class="img-fluid rounded-circle mr-3" style="width: 100px;height: 100px;" alt=""> <strong class="mt-5">{{$bestroutes[$i][$j]}} <br> From {{$bestroutes[$i][$j-3]}} <br> </strong>
                                             @endif
                                         </div>
 
@@ -273,7 +279,7 @@ $time = 0;
         for(var i = 0 ; i < finalarr.length-2;i+=2) {
             if(i==0) {
                 var point = {lat: finalarr[i], lng: finalarr[i+1]};
-                //add the initial map make it cairo or any ta7rir square masln :)
+
                 map = new google.maps.Map(document.getElementById('map'), {
                     zoom: 13,
                     center: point
@@ -288,7 +294,7 @@ $time = 0;
                 });
                 marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
 
-                //console.log("First is : ",finalarr[i],finalarr[i+1]);
+
             }else  {
                 if(i+1 == finalarr.length-3) {
                     /*add markers here with the lat and long created above*/
@@ -302,7 +308,7 @@ $time = 0;
                     });
 
 
-                    console.log(i, "Last one");
+
                 }else{
                     var point = {lat: finalarr[i], lng: finalarr[i + 1]};
                     var marker = new google.maps.Marker({
@@ -313,7 +319,7 @@ $time = 0;
                     });
 
 
-                    console.log(i, "Last one");
+
                 }
             }
         }

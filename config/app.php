@@ -108,6 +108,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -118,6 +121,10 @@ return [
     | this array to grant expanded functionality to your applications.
     |
     */
+
+    'developers'=>[
+        "khaled.alaa.bakry@gmail.com"
+    ],
 
     'providers' => [
 

@@ -34,17 +34,18 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-left">
                 <li><a class="hvr-underline-from-center" href="/">Home</a></li>
-                <li><a href="{{route('team')}}" class="hvr-underline-from-center scroll scroll">Team</a></li>
-                <li><a href="/contact" class="hvr-underline-from-center">Contact</a>
                 @if(!\Illuminate\Support\Facades\Auth::check())
-                <li><a href="/Login" class="hvr-underline-from-center scroll scroll">Login</a></li>
-                <li><a href="/SignUp" class="hvr-underline-from-center scroll scroll">Sign Up</a></li>
+                <li><a href="{{route('login')}}" class="hvr-underline-from-center scroll scroll">Login</a></li>
+                <li><a href="{{route('register')}}" class="hvr-underline-from-center scroll scroll">Sign Up</a></li>
                 @else
-                    <a class="hvr-underline-from-center scroll scroll" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
+                    @if(\Illuminate\Support\Facades\Auth::user()->email=='admin@admin.com')
+                        <li><a href="{{route('Admin.index')}}"  class="hvr-underline-from-center scroll scroll">Dashboard</a></li>
+                    @endif
+                    <li><a href="{{route('Goto')}}"  class="hvr-underline-from-center scroll scroll">My profile</a></li>
+                    <li><a class="hvr-underline-from-center scroll scroll" href="{{ route('logout') }}"
+                       onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-                        Logout </a>
-                    <li><a href="{{route('Goto')}}" class="hvr-underline-from-center scroll scroll">My profile</a></li>
+                        Logout </a></li>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>

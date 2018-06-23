@@ -14,7 +14,7 @@
         #cards{
             padding: 100px;
             background: #F2F2F2;
-            color: white;
+
             font-size: 30px;
         }
     </style>
@@ -38,7 +38,7 @@
 
 
 
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
                     <div class="card-header">Reviews</div>
                     <div class="card-body">
@@ -54,7 +54,7 @@
                 </div>
 
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
 
                 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                     <div class="card-header">Streets</div>
@@ -72,7 +72,7 @@
 
 
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
 
                 <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
                     <div class="card-header">Transports</div>
@@ -85,6 +85,14 @@
                                 <button class="btn btn-secondary">View</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card text-black" style="max-width: 18rem;">
+                    <div class="card-header">Home</div>
+                    <div class="card-body">
+                        <a href="/" class="btn btn-primary">Back to home</a>
                     </div>
                 </div>
             </div>
